@@ -1,2 +1,2 @@
-# ru.angelovich.core
+# angelovich core
 Base systems used in several projects
