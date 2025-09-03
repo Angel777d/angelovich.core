@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project]
+name = "angelovich.core"
+description = "Reusable python code by Angelovich"
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">= 3.12"
+version = "0.0.1"
+dependencies = [
+    #    "httpx",
+    #    "gidgethub[httpx]>4.0.0",
+    #    "django>2.1; os_name != 'nt'",
+    #    "django>2.0; os_name == 'nt'",
+]
+authors = [
+    { name = "Angelovich", email = "angel777da@gmail.com" },
+]
+maintainers = []
+license = "GPL-3.0-or-later"
+
+license-files = ["LICEN[CS]E*"]
+
+keywords = ["Data Storage", "ECS-like", "event bus", "decouple", ""]
+
+classifiers = [
+    # How mature is this project? Common values are
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
+    "Development Status :: 3 - Beta",
+    # Indicate who your project is intended for
+    "Intended Audience :: Developers",
+    # Specify the Python versions you support here.
+    "Programming Language :: Python :: 3.13",
+]
+
+[project.urls]
+Homepage = "https://github.com/Angel777d/angelovich.core"
+#DOWNLOAD = "https://example.com/abc.tar.gz"
+#Documentation = "https://readthedocs.org"
+Repository = "https://github.com/Angel777d/angelovich.core.git"
+#Issues = "https://github.com/me/spam/issues"
+Changelog = "https://github.com/Angel777d/angelovich.core/blob/main/CHANGELOG.md"
+
+
+#[project.scripts]
+#spam-cli = "spam:main_cli"
+#
+#[project.gui-scripts]
+#spam-gui = "spam:main_gui"
+#
+#[project.entry-points."spam.magical"]
+#tomatoes = "spam:main_tomatoes"
