@@ -33,7 +33,7 @@ class EntityComponent:
 
 class Entity:
 	def __init__(self, ds: "DataStorage"):
-		self.__ds = ds
+		self.__ds: DataStorage = ds
 		self.__entity_id: int = 0
 		self.__components: Dict[Type[EntityComponent], EntityComponent] = {}
 
