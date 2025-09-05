@@ -1,11 +1,11 @@
-from typing import Callable, Hashable, Dict, List, Tuple
+from typing import Callable, Hashable, Dict, List, Tuple, Awaitable
 
-
+CallbackType = Callable[[...], Awaitable[...]]
 class Dispatcher:
 	def __init__(self):
-		self.__handlers: Dict[str, List[Tuple[Hashable, Callable[[...], None]]]] = {}
+		self.__handlers: Dict[str, List[Tuple[Hashable, CallbackType]]] = {}
 
-	def add_listener(self, event: str, callback: Callable[[...], None], scope: Hashable = None) -> None:
+	def add_listener(self, event: str, callback: CallbackType, scope: Hashable = None) -> None:
 		self.__handlers.setdefault(event, []).append((scope, callback))
 
 	def remove_listener(self, event: str, scope: Hashable = None) -> None:
@@ -15,6 +15,6 @@ class Dispatcher:
 		for event, handlers in self.__handlers.items():
 			self.__handlers[event] = [(s, c) for s, c in handlers if s != scope]
 
-	def dispatch(self, event: str, *args, **kwargs) -> None:
+	async def dispatch(self, event: str, *args, **kwargs) -> None:
 		for e, callback in self.__handlers.get(event, []):
-			callback(*args, **kwargs)
+			await callback(*args, **kwargs)
