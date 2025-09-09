@@ -1,6 +1,9 @@
-from typing import Callable, Hashable, Dict, List, Tuple, Awaitable
+import asyncio
+from typing import Callable, Hashable, Dict, List, Tuple, Coroutine, Any
 
-CallbackType = Callable[[...], Awaitable[...]]
+CallbackType = Callable[[...], Coroutine[Any, Any, Any]]
+
+
 class Dispatcher:
 	def __init__(self):
 		self.__handlers: Dict[str, List[Tuple[Hashable, CallbackType]]] = {}
@@ -15,6 +18,5 @@ class Dispatcher:
 		for event, handlers in self.__handlers.items():
 			self.__handlers[event] = [(s, c) for s, c in handlers if s != scope]
 
-	async def dispatch(self, event: str, *args, **kwargs) -> None:
-		for e, callback in self.__handlers.get(event, []):
-			await callback(*args, **kwargs)
+	async def dispatch(self, event: str, *args, **kwargs) -> Tuple[asyncio.Task[Any], ...]:
+		return tuple(asyncio.create_task(callback(*args, **kwargs)) for e, callback in self.__handlers.get(event, []))
