@@ -60,8 +60,11 @@ class Entity:
 		del self.__components[component_type]
 		return self
 
-	def get_component[T:EntityComponent](self, component_type: Type[T]) -> Optional[T]:
-		return self.__components.get(component_type)
+	def get_component[T:EntityComponent](self, component_type: Type[T]) -> T:
+		result = self.__components.get(component_type)
+		if not result:
+			raise RuntimeError(f"Component {type(result)} not found in {component_type}")
+		return result
 
 	def is_valid(self) -> bool:
 		return bool(self.__entity_id)
