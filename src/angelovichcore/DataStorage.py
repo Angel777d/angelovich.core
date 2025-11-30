@@ -41,7 +41,7 @@ class Entity:
 	def entity_id(self) -> int:
 		return self.__entity_id
 
-	def has_component[T:EntityComponent](self, component_type: Type[T]) -> bool:
+	def has_component(self, component_type: Type[EntityComponent]) -> bool:
 		return component_type in self.__components
 
 	def add_component(self, component: EntityComponent) -> "Entity":
@@ -63,7 +63,7 @@ class Entity:
 	def get_component[T:EntityComponent](self, component_type: Type[T]) -> T:
 		result = self.__components.get(component_type)
 		if not result:
-			raise RuntimeError(f"Component {type(result)} not found in {component_type}")
+			raise RuntimeError(f"Component {component_type} not found in entity {self}")
 		return result
 
 	def is_valid(self) -> bool:
