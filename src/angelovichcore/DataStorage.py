@@ -1,7 +1,8 @@
 import logging
-
 import uuid
 from typing import List, Dict, Optional, Type, Hashable
+
+from angelovichcore.Dispatcher import Dispatcher
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +90,10 @@ class Entity:
 		return self.__ds
 
 
-class _Collection:
+class _Collection(Dispatcher):
+	EVENT_ADDED = "ADDED"
+	EVENT_REMOVED = "REMOVED"
+
 	@property
 	def entities(self) -> List[Entity]:
 		raise NotImplementedError()
@@ -98,10 +102,10 @@ class _Collection:
 		raise RuntimeError("Not hashable collection can't use find")
 
 	def _add(self, entity: Entity, component: EntityComponent) -> None:
-		raise NotImplementedError()
+		self.dispatch(self.EVENT_ADDED, entity, component)
 
 	def _remove(self, entity: Entity, component_type: type) -> None:
-		raise NotImplementedError()
+		self.dispatch(self.EVENT_REMOVED, entity, component_type)
 
 	def __len__(self):
 		raise NotImplementedError()
@@ -120,9 +124,11 @@ class HashCollection(_Collection):
 
 	def _add(self, entity: Entity, component: EntityComponent) -> None:
 		self.__data[component.get_hash()] = entity
+		super()._add(entity, component)
 
 	def _remove[T: EntityComponent](self, entity: Entity, component_type: Type[T]) -> None:
 		del self.__data[entity.get_component(component_type).get_hash()]
+		super()._remove(entity, component_type)
 
 	def __len__(self):
 		return len(self.__data)
@@ -138,9 +144,11 @@ class ListCollection(_Collection):
 
 	def _add(self, entity: Entity, component: EntityComponent) -> None:
 		self.__data.append(entity)
+		super()._add(entity, component)
 
 	def _remove(self, entity: Entity, _: type) -> None:
 		self.__data.remove(entity)
+		super()._remove(entity, _)
 
 	def __len__(self):
 		return len(self.__data)
