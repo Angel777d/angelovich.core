@@ -113,6 +113,7 @@ class _Collection(Dispatcher):
 
 class HashCollection(_Collection):
 	def __init__(self):
+		super().__init__()
 		self.__data: Dict[Hashable, Entity] = {}
 
 	@property
@@ -136,6 +137,7 @@ class HashCollection(_Collection):
 
 class ListCollection(_Collection):
 	def __init__(self):
+		super().__init__()
 		self.__data: List[Entity] = []
 
 	@property
