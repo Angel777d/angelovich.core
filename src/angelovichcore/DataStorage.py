@@ -24,12 +24,12 @@ class EntityComponent:
 	def _reset(self):
 		self.__entity_ref = None
 
-	# mark related entity with marker component
+	# mark a related entity with a marker component
 	def add_marker(self, marker_type: Type["EntityComponent"]) -> None:
 		self.__entity_ref.add_component(marker_type())
 
 	def _ds(self) -> "DataStorage":
-		self.__entity_ref._get_ds()
+		return self.__entity_ref._get_ds()
 
 
 class Entity:
