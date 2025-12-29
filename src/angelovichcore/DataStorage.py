@@ -105,7 +105,7 @@ class _Collection(Dispatcher):
 		self.dispatch(self.EVENT_ADDED, entity, component)
 
 	def _remove(self, entity: Entity, component_type: type) -> None:
-		self.dispatch(self.EVENT_REMOVED, entity, component_type)
+		self.dispatch(self.EVENT_REMOVED, entity)
 
 	def __len__(self):
 		raise NotImplementedError()
@@ -128,8 +128,8 @@ class HashCollection(_Collection):
 		super()._add(entity, component)
 
 	def _remove[T: EntityComponent](self, entity: Entity, component_type: Type[T]) -> None:
-		del self.__data[entity.get_component(component_type).get_hash()]
 		super()._remove(entity, component_type)
+		del self.__data[entity.get_component(component_type).get_hash()]
 
 	def __len__(self):
 		return len(self.__data)
@@ -149,8 +149,8 @@ class ListCollection(_Collection):
 		super()._add(entity, component)
 
 	def _remove(self, entity: Entity, _: type) -> None:
-		self.__data.remove(entity)
 		super()._remove(entity, _)
+		self.__data.remove(entity)
 
 	def __len__(self):
 		return len(self.__data)
