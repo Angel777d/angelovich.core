@@ -1,8 +1,5 @@
 from enum import ReprEnum
 
-from request import HTTPRequest as Request
-from response import HTTPResponse as Response
-from server import Server
 
 END_OF_LINE: bytes = b'\r\n'
 

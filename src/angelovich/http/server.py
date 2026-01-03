@@ -4,20 +4,22 @@ from asyncio import Server as AsyncServer
 from asyncio import StreamReader, StreamWriter
 from typing import Dict, Optional, Tuple
 
-from angelovich.http import Code, Protocol, Method, Request, Response
+from angelovich.http import Code, Protocol, Method
+from angelovich.http.request import HTTPRequest
+from angelovich.http.response import HTTPResponse
 
 logger = logging.getLogger(__name__)
 
 
 class Handler:
-	async def on_request(self, path: str, request: Request) -> Response:
+	async def on_request(self, path: str, request: HTTPRequest) -> HTTPResponse:
 		raise NotImplementedError
 
 
 class ErrorHandler(Handler):
-	async def on_request(self, path: str, request: Request) -> Response:
+	async def on_request(self, path: str, request: HTTPRequest) -> HTTPResponse:
 		headers = ["Content-Type: text/html; charset=utf-8"]
-		return Response(
+		return HTTPResponse(
 			Protocol.HTTP1_1,
 			Code.NOT_FOUND,
 			headers,
@@ -35,7 +37,7 @@ class Server:
 	def add_handler(self, method: Method, path: str, handler: Handler):
 		self.handlers.setdefault(method, {})[path] = handler
 
-	def select_handler(self, request: Request) -> Tuple[str, Handler]:
+	def select_handler(self, request: HTTPRequest) -> Tuple[str, Handler]:
 		for method in self.handlers:
 			if request.method != method:
 				continue
@@ -55,7 +57,7 @@ class Server:
 		self.server.close()
 
 	async def on_request(self, reader: StreamReader, writer: StreamWriter):
-		request = await Request.read(reader)
+		request = await HTTPRequest.read(reader)
 		logger.debug(f"Request: {request}")
 
 		path, handler = self.select_handler(request)
