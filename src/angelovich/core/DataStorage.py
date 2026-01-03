@@ -2,7 +2,7 @@ import logging
 import uuid
 from typing import List, Dict, Optional, Type, Hashable
 
-from angelovichcore.Dispatcher import Dispatcher
+from angelovich.core.Dispatcher import Dispatcher
 
 logger = logging.getLogger(__name__)
 

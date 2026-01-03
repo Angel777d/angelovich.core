@@ -1,6 +1,6 @@
 import unittest
 
-from angelovichcore.DataStorage import DataStorage
+from angelovich.core.DataStorage import DataStorage
 
 
 class DataStorageTestCase(unittest.TestCase):
