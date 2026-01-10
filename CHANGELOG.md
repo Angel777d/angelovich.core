@@ -1,3 +1,4 @@
 #### version 0.0.1
 
-- Data storage implemented in the lib
+- ECS-like Data storage implemented
+- Async dispatcher implemented
