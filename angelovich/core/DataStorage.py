@@ -11,13 +11,6 @@ class EntityComponent:
 	def __init__(self):
 		self.__entity_ref: Optional[Entity] = None
 
-	@classmethod
-	def is_hashable(cls) -> bool:
-		return False
-
-	def get_hash(self) -> Hashable:
-		raise NotImplementedError()
-
 	def _set_entity_ref(self, entity: "Entity") -> None:
 		self.__entity_ref = entity
 
@@ -121,10 +114,10 @@ class HashCollection(_Collection):
 		return list(self.__data.values())
 
 	def find(self, search_value: Hashable) -> Optional[Entity]:
-		return self.__data.get(search_value, None)
+		return self.__data.get(hash(search_value), None)
 
 	def _add(self, entity: Entity, component: EntityComponent) -> None:
-		self.__data[component.get_hash()] = entity
+		self.__data[hash(component)] = entity
 		super()._add(entity, component)
 
 	def _remove[T: EntityComponent](self, entity: Entity, component_type: Type[T]) -> None:
@@ -176,7 +169,7 @@ class DataStorage:
 	def get_collection[T: EntityComponent](self, component_type: Type[T]) -> _Collection:
 		return self.__collections.setdefault(
 			component_type,
-			HashCollection() if component_type.is_hashable() else ListCollection()
+			HashCollection() if hasattr(component_type, "__hash__") else ListCollection()
 		)
 
 	#
@@ -193,7 +186,7 @@ class DataStorage:
 	def _add_component(self, entity: Entity, component: EntityComponent) -> None:
 		self.__collections.setdefault(
 			type(component),
-			HashCollection() if component.is_hashable() else ListCollection()
+			HashCollection() if isinstance(component, Hashable) else ListCollection()
 		)._add(entity, component)
 
 	def _remove_component[T: EntityComponent](self, entity: Entity, component_type: Type[T]) -> None:
