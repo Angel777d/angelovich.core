@@ -25,6 +25,14 @@ class EntityComponent:
 		return self.__entity_ref._get_ds()
 
 
+class EntityHashComponent(EntityComponent):
+	def __hash__(self):
+		raise NotImplementedError()
+
+	def __eq__(self, other):
+		return hash(self) == hash(other)
+
+
 class Entity:
 	def __init__(self, ds: "DataStorage"):
 		self.__ds: DataStorage = ds
@@ -114,10 +122,10 @@ class HashCollection(_Collection):
 		return list(self.__data.values())
 
 	def find(self, search_value: Hashable) -> Optional[Entity]:
-		return self.__data.get(hash(search_value), None)
+		return self.__data.get(search_value, None)
 
 	def _add(self, entity: Entity, component: EntityComponent) -> None:
-		self.__data[hash(component)] = entity
+		self.__data[component] = entity
 		super()._add(entity, component)
 
 	def _remove[T: EntityComponent](self, entity: Entity, component_type: Type[T]) -> None:

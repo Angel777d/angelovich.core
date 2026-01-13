@@ -1,6 +1,6 @@
 import unittest
 
-from angelovich.core.DataStorage import DataStorage, EntityComponent
+from angelovich.core.DataStorage import DataStorage, EntityComponent, EntityHashComponent
 
 
 class DataStorageTestCase(unittest.TestCase):
@@ -14,7 +14,7 @@ class DataStorageTestCase(unittest.TestCase):
 		assert not entity.is_valid()
 
 	def test_hash_collection(self):
-		class TestComponent(EntityComponent):
+		class TestComponent(EntityHashComponent):
 			def __init__(self, value: int = 0):
 				super().__init__()
 				self.value: int = value
@@ -22,7 +22,8 @@ class DataStorageTestCase(unittest.TestCase):
 			def __hash__(self):
 				return hash(self.value)
 
-		class TestComponent2(EntityComponent):
+
+		class TestComponent2(EntityHashComponent):
 			def __init__(self, value: int = 0, value2: str = ""):
 				super().__init__()
 				self.value1: int = value
@@ -34,6 +35,9 @@ class DataStorageTestCase(unittest.TestCase):
 
 			def __hash__(self):
 				return hash(self.make_key(self.value1, self.value2))
+
+			def __eq__(self, other):
+				return hash(self) == hash(other)
 
 		ds = DataStorage()
 		ds.create_entity().add_component(TestComponent(1))
