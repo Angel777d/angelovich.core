@@ -122,7 +122,7 @@ class HashCollection(_Collection):
 
 	def _remove[T: EntityComponent](self, entity: Entity, component_type: Type[T]) -> None:
 		super()._remove(entity, component_type)
-		del self.__data[entity.get_component(component_type).get_hash()]
+		del self.__data[entity.get_component(component_type)]
 
 	def __len__(self):
 		return len(self.__data)
