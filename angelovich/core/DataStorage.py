@@ -1,6 +1,6 @@
 import logging
 import uuid
-from typing import List, Dict, Optional, Type, Hashable
+from typing import List, Dict, Optional, Type, Hashable, Iterable
 
 from angelovich.core.Dispatcher import Dispatcher
 
@@ -91,12 +91,15 @@ class Entity:
 		return self.__ds
 
 
-class _Collection(Dispatcher):
+class _Collection(Dispatcher, Iterable[Entity]):
 	EVENT_ADDED = "ADDED"
 	EVENT_REMOVED = "REMOVED"
 
 	@property
 	def entities(self) -> List[Entity]:
+		raise NotImplementedError()
+
+	def __iter__(self):
 		raise NotImplementedError()
 
 	def find(self, search_value: Hashable) -> Optional[Entity]:
@@ -125,6 +128,8 @@ class HashCollection(_Collection):
 		return self.__data.get(search_value, None)
 
 	def _add(self, entity: Entity, component: EntityComponent) -> None:
+		if component in self.__data:
+			raise RuntimeError(f"Component {component} already added to entity {entity}")
 		self.__data[component] = entity
 		super()._add(entity, component)
 
@@ -134,6 +139,10 @@ class HashCollection(_Collection):
 
 	def __len__(self):
 		return len(self.__data)
+
+	def __iter__(self):
+		for key in self.__data:
+			yield self.__data[key]
 
 
 class ListCollection(_Collection):
@@ -155,6 +164,10 @@ class ListCollection(_Collection):
 
 	def __len__(self):
 		return len(self.__data)
+
+	def __iter__(self):
+		for value in self.__data:
+			yield value
 
 
 class DataStorage:

@@ -40,14 +40,18 @@ class DataStorageTestCase(unittest.TestCase):
 				return hash(self) == hash(other)
 
 		ds = DataStorage()
-		ds.create_entity().add_component(TestComponent(1))
-		ds.create_entity().add_component(TestComponent(2))
+		e1 = ds.create_entity().add_component(TestComponent(1))
+		e2 = ds.create_entity().add_component(TestComponent(2))
 		collection = ds.get_collection(TestComponent)
 
 		assert len(collection) == 2
 		assert collection.find(1) is not None
 		assert collection.find(2) is not None
 		assert collection.find(3) is None
+
+		ds.remove_entity(e1)
+		ds.remove_entity(e2)
+		assert len(collection) == 0
 
 		ds.create_entity().add_component(TestComponent2(1, "dasda"))
 		ds.create_entity().add_component(TestComponent2(2, "asdasda"))
